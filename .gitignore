@@ -1,0 +1,26 @@
+# Compiled files (make)
+*.o
+test_correctness
+test_performance
+test_tail_optimization
+run_all_tests
+
+# Compiled files (VSCode/direct g++)
+*.out
+*.exe
+
+# Results
+*.csv
+*.png
+
+# IDE/Editor files
+# Note: We keep .vscode/tasks.json but ignore other .vscode files
+.vscode/*
+!.vscode/tasks.json
+.idea/
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -9,7 +9,8 @@ using namespace std;
 
 const vector<int> SIZES = {100, 500, 1000, 2000, 5000};
 
-int benchmark_append(auto& ds, int size) {
+template<typename T>
+int benchmark_append(T& ds, int size) {
     int total_ops = 0;
     for (int i = 0; i < size; i++) {
         total_ops += ds.append(i);

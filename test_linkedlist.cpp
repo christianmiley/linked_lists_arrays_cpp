@@ -160,67 +160,106 @@ int main() {
     
     // Test 2.1: Get from empty list
     section_total++; total_tests++;
-    if (run_test([]() {
+    {
         LinkedList ll;
         auto [val, ops] = ll.get(0);
-        return val == -1;
-    }, "Get from empty list returns -1")) {
-        section_passed++; total_passed++;
+        bool passed = (val == -1);
+        if (!passed) {
+            cout << "[✗] Get from empty list returns -1" << endl;
+            cout << "    List: " << ll.display() << endl;
+            cout << "    Expected: -1" << endl;
+            cout << "    Actual:   " << val << endl;
+        } else {
+            cout << "[✓] Get from empty list returns -1" << endl;
+            section_passed++; total_passed++;
+        }
     }
     
     // Test 2.2: Get out of bounds
     section_total++; total_tests++;
-    if (run_test([]() {
+    {
         LinkedList ll;
         ll.append(10);
         ll.append(20);
         auto [val, ops] = ll.get(5);
-        return val == -1;
-    }, "Get out of bounds returns -1")) {
-        section_passed++; total_passed++;
+        bool passed = (val == -1);
+        if (!passed) {
+            cout << "[✗] Get out of bounds returns -1" << endl;
+            cout << "    List: " << ll.display() << endl;
+            cout << "    Requested index: 5 (size is " << ll.size() << ")" << endl;
+            cout << "    Expected: -1" << endl;
+            cout << "    Actual:   " << val << endl;
+        } else {
+            cout << "[✓] Get out of bounds returns -1" << endl;
+            section_passed++; total_passed++;
+        }
     }
     
     // Test 2.3: Get first element
     section_total++; total_tests++;
-    if (run_test([]() {
+    {
         LinkedList ll;
         ll.append(100);
         ll.append(200);
         auto [val, ops] = ll.get(0);
-        return val == 100;
-    }, "Get first element (index 0)")) {
-        section_passed++; total_passed++;
+        bool passed = (val == 100);
+        if (!passed) {
+            cout << "[✗] Get first element (index 0)" << endl;
+            cout << "    List: " << ll.display() << endl;
+            cout << "    Requested index: 0" << endl;
+            cout << "    Expected: 100" << endl;
+            cout << "    Actual:   " << val << endl;
+        } else {
+            cout << "[✓] Get first element (index 0)" << endl;
+            section_passed++; total_passed++;
+        }
     }
     
     // Test 2.4: Get middle element
     section_total++; total_tests++;
-    if (run_test([]() {
+    {
         LinkedList ll;
         ll.append(10);
         ll.append(20);
         ll.append(30);
         auto [val, ops] = ll.get(1);
-        return val == 20;
-    }, "Get middle element")) {
-        section_passed++; total_passed++;
+        bool passed = (val == 20);
+        if (!passed) {
+            cout << "[✗] Get middle element" << endl;
+            cout << "    List: " << ll.display() << endl;
+            cout << "    Requested index: 1" << endl;
+            cout << "    Expected: 20" << endl;
+            cout << "    Actual:   " << val << endl;
+        } else {
+            cout << "[✓] Get middle element" << endl;
+            section_passed++; total_passed++;
+        }
     }
     
     // Test 2.5: Get last element
     section_total++; total_tests++;
-    if (run_test([]() {
+    {
         LinkedList ll;
         ll.append(5);
         ll.append(10);
         ll.append(15);
         auto [val, ops] = ll.get(2);
-        return val == 15;
-    }, "Get last element")) {
-        section_passed++; total_passed++;
+        bool passed = (val == 15);
+        if (!passed) {
+            cout << "[✗] Get last element" << endl;
+            cout << "    List: " << ll.display() << endl;
+            cout << "    Requested index: 2" << endl;
+            cout << "    Expected: 15" << endl;
+            cout << "    Actual:   " << val << endl;
+        } else {
+            cout << "[✓] Get last element" << endl;
+            section_passed++; total_passed++;
+        }
     }
     
     // Test 2.6: Get from longer list
     section_total++; total_tests++;
-    if (run_test([]() {
+    {
         LinkedList ll;
         for (int i = 0; i < 10; i++) {
             ll.append(i * 10);
@@ -228,9 +267,17 @@ int main() {
         auto [val0, ops0] = ll.get(0);
         auto [val5, ops5] = ll.get(5);
         auto [val9, ops9] = ll.get(9);
-        return val0 == 0 && val5 == 50 && val9 == 90;
-    }, "Get from various positions in longer list")) {
-        section_passed++; total_passed++;
+        bool passed = (val0 == 0 && val5 == 50 && val9 == 90);
+        if (!passed) {
+            cout << "[✗] Get from various positions in longer list" << endl;
+            cout << "    List: " << ll.display() << endl;
+            cout << "    get(0): Expected 0, Got " << val0 << (val0 == 0 ? " ✓" : " ✗") << endl;
+            cout << "    get(5): Expected 50, Got " << val5 << (val5 == 50 ? " ✓" : " ✗") << endl;
+            cout << "    get(9): Expected 90, Got " << val9 << (val9 == 90 ? " ✓" : " ✗") << endl;
+        } else {
+            cout << "[✓] Get from various positions in longer list" << endl;
+            section_passed++; total_passed++;
+        }
     }
     
     cout << "Section 2: " << section_passed << "/" << section_total << " passed\n" << endl;
@@ -241,6 +288,7 @@ int main() {
         cout << "  - Not checking bounds: if (index < 0 || index >= _size) return {-1, 0}" << endl;
         cout << "  - Not traversing correct number of times" << endl;
         cout << "  - Off-by-one errors in loop" << endl;
+        cout << "  - Returning wrong value (make sure to return current->data)" << endl;
         return 1;
     }
     

@@ -23,10 +23,10 @@ echo "============================================================"
 echo ""
 echo "Compiling tests..."
 
-# Compile correctness tests
-g++ --std=c++17 test_correctness.cpp ArrayList.cpp LinkedList.cpp -o test_correctness.out 2>&1
+# Compile LinkedList tests
+g++ --std=c++17 test_linkedlist.cpp ArrayList.cpp LinkedList.cpp -o test_linkedlist.out 2>&1
 if [ $? -ne 0 ]; then
-    echo "[X] Compilation failed for correctness tests"
+    echo "[X] Compilation failed for LinkedList tests"
     echo "    Make sure all .cpp and .h files are in this directory"
     exit 1
 fi
@@ -48,20 +48,20 @@ fi
 echo "[OK] All files compiled successfully!"
 echo ""
 
-# Run correctness tests and capture output
-echo "Running correctness tests..."
-test_output=$(./test_correctness.out)
+# Run LinkedList tests and capture output
+echo "Running LinkedList tests..."
+test_output=$(./test_linkedlist.out)
 echo "$test_output"
 
-# Check if LinkedList tests all passed by looking for "11/11 tests passed" for LinkedList
-if echo "$test_output" | grep -q "=== Testing LinkedList ===" && \
-   echo "$test_output" | grep -A 20 "=== Testing LinkedList ===" | grep -q "Summary: 11/11 tests passed"; then
+# Check if all tests passed by looking for the success message
+if echo "$test_output" | grep -q "Total: [0-9]*/[0-9]* tests passed" && \
+   echo "$test_output" | grep -q "\[SUCCESS\] All tests passed"; then
     echo ""
     echo "[OK] All LinkedList tests passed!"
 else
     echo ""
     echo "[!] LinkedList tests failed. Fix your LinkedList implementation first."
-    echo "    You need all 11 tests to pass before running performance tests."
+    echo "    Review the errors above to see which functions need fixing."
     exit 1
 fi
 

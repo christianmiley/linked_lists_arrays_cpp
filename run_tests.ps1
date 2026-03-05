@@ -21,14 +21,35 @@ Write-Host "  DATA STRUCTURES PERFORMANCE COMPARISON" -ForegroundColor Cyan
 Write-Host "  ArrayList vs LinkedList" -ForegroundColor Cyan
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host ""
+
+# Check if g++ is available
+Write-Host "Checking for g++ compiler..." -ForegroundColor Yellow
+$gppPath = Get-Command g++ -ErrorAction SilentlyContinue
+if (-not $gppPath) {
+    Write-Host ""
+    Write-Host "❌ ERROR: g++ compiler not found!" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "g++ is required to compile C++ code." -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "Please install a C++ compiler. Options:" -ForegroundColor Yellow
+    Write-Host "  1. MinGW: https://sourceforge.net/projects/mingw/" -ForegroundColor Cyan
+    Write-Host "  2. MSYS2: https://www.msys2.org/" -ForegroundColor Cyan
+    Write-Host "  3. WSL (Windows Subsystem for Linux)" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "See WINDOWS_SETUP.md for detailed installation instructions." -ForegroundColor Yellow
+    Write-Host ""
+    exit 1
+}
+
+Write-Host "✓ g++ found: $($gppPath.Source)" -ForegroundColor Green
 Write-Host "Compiling tests..." -ForegroundColor Yellow
 
-# Compile correctness tests
-Write-Host "Compiling correctness tests..."
-g++ --std=c++17 test_correctness.cpp ArrayList.cpp LinkedList.cpp -o test_correctness.exe
+# Compile LinkedList tests
+Write-Host "Compiling LinkedList tests..."
+g++ --std=c++17 test_linkedlist.cpp ArrayList.cpp LinkedList.cpp -o test_linkedlist.exe
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "❌ Compilation failed for correctness tests" -ForegroundColor Red
-    Write-Host "   Make sure all .cpp and .h files are in this directory" -ForegroundColor Red
+    Write-Host "[X] Compilation failed for LinkedList tests" -ForegroundColor Red
+    Write-Host "    Make sure all .cpp and .h files are in this directory" -ForegroundColor Red
     exit 1
 }
 
@@ -51,19 +72,23 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "✅ All files compiled successfully!" -ForegroundColor Green
 Write-Host ""
 
-# Run correctness tests
-Write-Host "Running correctness tests..." -ForegroundColor Yellow
-.\test_correctness.exe
+# Run LinkedList tests
+Write-Host "Running LinkedList tests..." -ForegroundColor Yellow
+.\test_linkedlist.exe
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host ""
-    Write-Host "⚠️  Correctness tests failed. Fix your LinkedList implementation first." -ForegroundColor Yellow
+    Write-Host "[!] LinkedList tests failed. Fix your LinkedList implementation first." -ForegroundColor Yellow
+    Write-Host "    Review the errors above to see which functions need fixing." -ForegroundColor Yellow
     exit 1
 }
 
+Write-Host ""
+Write-Host "[OK] All LinkedList tests passed!" -ForegroundColor Green
+
 # Ask before running performance tests
 Write-Host ""
-$response = Read-Host "✅ Correctness tests passed! Run performance tests? (y/n)"
+$response = Read-Host "[OK] Ready for performance tests. Continue? (y/n)"
 if ($response -eq "y" -or $response -eq "Y") {
     .\test_performance.exe
 } else {

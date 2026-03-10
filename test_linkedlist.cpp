@@ -41,7 +41,7 @@ bool run_test(function<bool()> test_func, const string& description, const strin
             cout << "[✓] " << description << endl;
             return true;
         } else {
-            cout << "[✗] " << description << endl;
+            cout << "[X] " << description << endl;
             if (!expected.empty() && !actual.empty()) {
                 cout << "    Expected: " << expected << endl;
                 cout << "    Actual:   " << actual << endl;
@@ -165,7 +165,7 @@ int main() {
         auto [val, ops] = ll.get(0);
         bool passed = (val == -1);
         if (!passed) {
-            cout << "[✗] Get from empty list returns -1" << endl;
+            cout << "[X] Get from empty list returns -1" << endl;
             cout << "    List: " << ll.display() << endl;
             cout << "    Expected: -1" << endl;
             cout << "    Actual:   " << val << endl;
@@ -184,7 +184,7 @@ int main() {
         auto [val, ops] = ll.get(5);
         bool passed = (val == -1);
         if (!passed) {
-            cout << "[✗] Get out of bounds returns -1" << endl;
+            cout << "[X] Get out of bounds returns -1" << endl;
             cout << "    List: " << ll.display() << endl;
             cout << "    Requested index: 5 (size is " << ll.size() << ")" << endl;
             cout << "    Expected: -1" << endl;
@@ -204,7 +204,7 @@ int main() {
         auto [val, ops] = ll.get(0);
         bool passed = (val == 100);
         if (!passed) {
-            cout << "[✗] Get first element (index 0)" << endl;
+            cout << "[X] Get first element (index 0)" << endl;
             cout << "    List: " << ll.display() << endl;
             cout << "    Requested index: 0" << endl;
             cout << "    Expected: 100" << endl;
@@ -225,7 +225,7 @@ int main() {
         auto [val, ops] = ll.get(1);
         bool passed = (val == 20);
         if (!passed) {
-            cout << "[✗] Get middle element" << endl;
+            cout << "[X] Get middle element" << endl;
             cout << "    List: " << ll.display() << endl;
             cout << "    Requested index: 1" << endl;
             cout << "    Expected: 20" << endl;
@@ -246,7 +246,7 @@ int main() {
         auto [val, ops] = ll.get(2);
         bool passed = (val == 15);
         if (!passed) {
-            cout << "[✗] Get last element" << endl;
+            cout << "[X] Get last element" << endl;
             cout << "    List: " << ll.display() << endl;
             cout << "    Requested index: 2" << endl;
             cout << "    Expected: 15" << endl;
@@ -269,11 +269,11 @@ int main() {
         auto [val9, ops9] = ll.get(9);
         bool passed = (val0 == 0 && val5 == 50 && val9 == 90);
         if (!passed) {
-            cout << "[✗] Get from various positions in longer list" << endl;
+            cout << "[X] Get from various positions in longer list" << endl;
             cout << "    List: " << ll.display() << endl;
-            cout << "    get(0): Expected 0, Got " << val0 << (val0 == 0 ? " ✓" : " ✗") << endl;
-            cout << "    get(5): Expected 50, Got " << val5 << (val5 == 50 ? " ✓" : " ✗") << endl;
-            cout << "    get(9): Expected 90, Got " << val9 << (val9 == 90 ? " ✓" : " ✗") << endl;
+            cout << "    get(0): Expected 0, Got " << val0 << (val0 == 0 ? " ✓" : " X") << endl;
+            cout << "    get(5): Expected 50, Got " << val5 << (val5 == 50 ? " ✓" : " X") << endl;
+            cout << "    get(9): Expected 90, Got " << val9 << (val9 == 90 ? " ✓" : " X") << endl;
         } else {
             cout << "[✓] Get from various positions in longer list" << endl;
             section_passed++; total_passed++;

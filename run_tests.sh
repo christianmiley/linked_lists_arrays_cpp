@@ -48,14 +48,26 @@ fi
 echo "[OK] All files compiled successfully!"
 echo ""
 
-# Run LinkedList tests and capture output
+# Run LinkedList tests directly so output appears live
 echo "Running LinkedList tests..."
-test_output=$(./test_linkedlist.out)
-echo "$test_output"
 
-# Check if all tests passed by looking for the success message
-if echo "$test_output" | grep -q "Total: [0-9]*/[0-9]* tests passed" && \
-   echo "$test_output" | grep -q "\[SUCCESS\] All tests passed"; then
+if command -v timeout >/dev/null 2>&1; then
+    timeout 10 ./test_linkedlist.out
+    test_exit=$?
+
+    if [ $test_exit -eq 124 ]; then
+        echo ""
+        echo "[!] LinkedList tests timed out after 10 seconds."
+        echo "    This usually indicates an infinite loop or hang."
+        exit 1
+    fi
+else
+    ./test_linkedlist.out
+    test_exit=$?
+fi
+
+# Check whether tests passed
+if [ $test_exit -eq 0 ]; then
     echo ""
     echo "[OK] All LinkedList tests passed!"
 else

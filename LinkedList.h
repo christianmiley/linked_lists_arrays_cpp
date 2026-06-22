@@ -3,6 +3,7 @@
 
 #include <string>
 #include <utility>
+#include <tuple>
 
 struct Node {
     int data;
@@ -23,8 +24,8 @@ class LinkedList {
         // Operations that return operation count
         int append(int value);
         int prepend(int value);
-        int insert_at(int index, int value);
-        std::pair<int, int> get(int index);  // Returns (value, operations)
+        std::pair<bool, int> insert_at(int index, int value);  // Returns (success, operations)
+        std::tuple<bool, int, int> get(int index);  // Returns (found, value, operations)
         std::pair<int, int> search(int value);  // Returns (index, operations)
         std::pair<bool, int> remove(int value);  // Returns (success, operations)
         

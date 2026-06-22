@@ -111,10 +111,11 @@ bool check_size(const LinkedList& ll, int expected, const string& description) {
     return false;
 }
 
-// For remove(): checks the returned success flag AND the resulting contents
-// (size is covered separately by dedicated size tests). Each failing dimension
-// is reported independently.
-bool check_remove(bool success, bool expected_success,
+// For operations that return a (success, ops) flag plus leave the list in a
+// known state (insert_at, remove): checks the returned success flag AND the
+// resulting contents (size is covered separately by dedicated size tests).
+// Each failing dimension is reported independently.
+bool check_result(bool success, bool expected_success,
                   const LinkedList& ll, const string& expected_contents,
                   const string& description) {
     current_test_name = description;
@@ -247,122 +248,161 @@ int main() {
     section_passed = 0;
     section_total = 0;
 
-    // Test 2.1: Get from empty list
+    // Test 2.1: Get from empty list (out of bounds -> found == false)
     section_total++; total_tests++;
     {
         LinkedList ll;
-        auto [val, ops] = ll.get(0);
-        bool passed = (val == -1);
+        auto [found, val, ops] = ll.get(0);
+        bool passed = (!found);
         if (!passed) {
-            cout << "[X] Get from empty list returns -1" << endl;
+            cout << "[X] Get from empty list reports not found" << endl;
             cout << "    List: " << ll.display() << endl;
-            cout << "    Expected: -1" << endl;
-            cout << "    Actual:   " << val << endl;
+            cout << "    Expected: found == false" << endl;
+            cout << "    Actual:   found == true (value " << val << ")" << endl;
         } else {
-            cout << "[OK] Get from empty list returns -1" << endl;
+            cout << "[OK] Get from empty list reports not found" << endl;
             section_passed++; total_passed++;
         }
     }
 
-    // Test 2.2: Get out of bounds
+    // Test 2.2: Get out of bounds (index past end -> found == false)
     section_total++; total_tests++;
     {
         LinkedList ll;
         ll.append(10);
         ll.append(20);
-        auto [val, ops] = ll.get(5);
-        bool passed = (val == -1);
+        auto [found, val, ops] = ll.get(5);
+        bool passed = (!found);
         if (!passed) {
-            cout << "[X] Get out of bounds returns -1" << endl;
+            cout << "[X] Get out of bounds reports not found" << endl;
             cout << "    List: " << ll.display() << endl;
             cout << "    Requested index: 5 (size is " << ll.size() << ")" << endl;
-            cout << "    Expected: -1" << endl;
-            cout << "    Actual:   " << val << endl;
+            cout << "    Expected: found == false" << endl;
+            cout << "    Actual:   found == true (value " << val << ")" << endl;
         } else {
-            cout << "[OK] Get out of bounds returns -1" << endl;
+            cout << "[OK] Get out of bounds reports not found" << endl;
             section_passed++; total_passed++;
         }
     }
 
-    // Test 2.3: Get first element
+    // Test 2.3: Get negative index (-> found == false)
+    section_total++; total_tests++;
+    {
+        LinkedList ll;
+        ll.append(10);
+        ll.append(20);
+        auto [found, val, ops] = ll.get(-1);
+        bool passed = (!found);
+        if (!passed) {
+            cout << "[X] Get negative index reports not found" << endl;
+            cout << "    List: " << ll.display() << endl;
+            cout << "    Requested index: -1" << endl;
+            cout << "    Expected: found == false" << endl;
+            cout << "    Actual:   found == true (value " << val << ")" << endl;
+        } else {
+            cout << "[OK] Get negative index reports not found" << endl;
+            section_passed++; total_passed++;
+        }
+    }
+
+    // Test 2.4: Get first element
     section_total++; total_tests++;
     {
         LinkedList ll;
         ll.append(100);
         ll.append(200);
-        auto [val, ops] = ll.get(0);
-        bool passed = (val == 100);
+        auto [found, val, ops] = ll.get(0);
+        bool passed = (found && val == 100);
         if (!passed) {
             cout << "[X] Get first element (index 0)" << endl;
             cout << "    List: " << ll.display() << endl;
             cout << "    Requested index: 0" << endl;
-            cout << "    Expected: 100" << endl;
-            cout << "    Actual:   " << val << endl;
+            cout << "    Expected: found == true, value 100" << endl;
+            cout << "    Actual:   found == " << (found ? "true" : "false") << ", value " << val << endl;
         } else {
             cout << "[OK] Get first element (index 0)" << endl;
             section_passed++; total_passed++;
         }
     }
 
-    // Test 2.4: Get middle element
+    // Test 2.5: Get middle element
     section_total++; total_tests++;
     {
         LinkedList ll;
         ll.append(10);
         ll.append(20);
         ll.append(30);
-        auto [val, ops] = ll.get(1);
-        bool passed = (val == 20);
+        auto [found, val, ops] = ll.get(1);
+        bool passed = (found && val == 20);
         if (!passed) {
             cout << "[X] Get middle element" << endl;
             cout << "    List: " << ll.display() << endl;
             cout << "    Requested index: 1" << endl;
-            cout << "    Expected: 20" << endl;
-            cout << "    Actual:   " << val << endl;
+            cout << "    Expected: found == true, value 20" << endl;
+            cout << "    Actual:   found == " << (found ? "true" : "false") << ", value " << val << endl;
         } else {
             cout << "[OK] Get middle element" << endl;
             section_passed++; total_passed++;
         }
     }
 
-    // Test 2.5: Get last element
+    // Test 2.6: Get last element
     section_total++; total_tests++;
     {
         LinkedList ll;
         ll.append(5);
         ll.append(10);
         ll.append(15);
-        auto [val, ops] = ll.get(2);
-        bool passed = (val == 15);
+        auto [found, val, ops] = ll.get(2);
+        bool passed = (found && val == 15);
         if (!passed) {
             cout << "[X] Get last element" << endl;
             cout << "    List: " << ll.display() << endl;
             cout << "    Requested index: 2" << endl;
-            cout << "    Expected: 15" << endl;
-            cout << "    Actual:   " << val << endl;
+            cout << "    Expected: found == true, value 15" << endl;
+            cout << "    Actual:   found == " << (found ? "true" : "false") << ", value " << val << endl;
         } else {
             cout << "[OK] Get last element" << endl;
             section_passed++; total_passed++;
         }
     }
 
-    // Test 2.6: Get from longer list
+    // Test 2.7: Get a stored -1 (the found flag must distinguish it from OOB)
+    section_total++; total_tests++;
+    {
+        LinkedList ll;
+        ll.append(-1);
+        auto [found, val, ops] = ll.get(0);
+        bool passed = (found && val == -1);
+        if (!passed) {
+            cout << "[X] Get a stored -1 value" << endl;
+            cout << "    List: " << ll.display() << endl;
+            cout << "    Requested index: 0" << endl;
+            cout << "    Expected: found == true, value -1" << endl;
+            cout << "    Actual:   found == " << (found ? "true" : "false") << ", value " << val << endl;
+        } else {
+            cout << "[OK] Get a stored -1 value (found flag distinguishes it from out-of-bounds)" << endl;
+            section_passed++; total_passed++;
+        }
+    }
+
+    // Test 2.8: Get from longer list
     section_total++; total_tests++;
     {
         LinkedList ll;
         for (int i = 0; i < 10; i++) {
             ll.append(i * 10);
         }
-        auto [val0, ops0] = ll.get(0);
-        auto [val5, ops5] = ll.get(5);
-        auto [val9, ops9] = ll.get(9);
-        bool passed = (val0 == 0 && val5 == 50 && val9 == 90);
+        auto [found0, val0, ops0] = ll.get(0);
+        auto [found5, val5, ops5] = ll.get(5);
+        auto [found9, val9, ops9] = ll.get(9);
+        bool passed = (found0 && val0 == 0 && found5 && val5 == 50 && found9 && val9 == 90);
         if (!passed) {
             cout << "[X] Get from various positions in longer list" << endl;
             cout << "    List: " << ll.display() << endl;
-            cout << "    get(0): Expected 0, Got " << val0 << (val0 == 0 ? " [OK]" : " [X]") << endl;
-            cout << "    get(5): Expected 50, Got " << val5 << (val5 == 50 ? " [OK]" : " [X]") << endl;
-            cout << "    get(9): Expected 90, Got " << val9 << (val9 == 90 ? " [OK]" : " [X]") << endl;
+            cout << "    get(0): Expected 0, Got " << val0 << ((found0 && val0 == 0) ? " [OK]" : " [X]") << endl;
+            cout << "    get(5): Expected 50, Got " << val5 << ((found5 && val5 == 50) ? " [OK]" : " [X]") << endl;
+            cout << "    get(9): Expected 90, Got " << val9 << ((found9 && val9 == 90) ? " [OK]" : " [X]") << endl;
         } else {
             cout << "[OK] Get from various positions in longer list" << endl;
             section_passed++; total_passed++;
@@ -374,7 +414,8 @@ int main() {
     if (section_passed < section_total) {
         cout << "[!] Fix get() before proceeding.\n" << endl;
         cout << "[HINT] Common get() bugs:" << endl;
-        cout << "  - Not checking bounds: if (index < 0 || index >= _size) return {-1, 0}" << endl;
+        cout << "  - Not checking bounds: if (index < 0 || index >= _size) return {false, -1, 0}" << endl;
+        cout << "  - Returning found == false for a valid index (or true when out of bounds)" << endl;
         cout << "  - Not traversing correct number of times" << endl;
         cout << "  - Off-by-one errors in loop" << endl;
         cout << "  - Returning wrong value (make sure to return current->data)" << endl;
@@ -468,56 +509,80 @@ int main() {
     section_passed = 0;
     section_total = 0;
 
-    // Test 4.1: Insert at beginning (index 0) (contents)
+    // Test 4.1: Insert at beginning (index 0) (return value + contents)
     section_total++; total_tests++;
     {
         LinkedList ll;
         ll.append(20);
         ll.append(30);
-        ll.insert_at(0, 10);
-        if (check_contents(ll, "[10 -> 20 -> 30]", "Insert at index 0 (beginning) (contents)")) {
+        auto [ok, ops] = ll.insert_at(0, 10);
+        if (check_result(ok, true, ll, "[10 -> 20 -> 30]", "Insert at index 0 (beginning)")) {
             section_passed++; total_passed++;
         }
     }
 
-    // Test 4.2: Insert in middle (contents)
+    // Test 4.2: Insert in middle (return value + contents)
     section_total++; total_tests++;
     {
         LinkedList ll;
         ll.append(10);
         ll.append(30);
-        ll.insert_at(1, 20);
-        if (check_contents(ll, "[10 -> 20 -> 30]", "Insert in middle (contents)")) {
+        auto [ok, ops] = ll.insert_at(1, 20);
+        if (check_result(ok, true, ll, "[10 -> 20 -> 30]", "Insert in middle")) {
             section_passed++; total_passed++;
         }
     }
 
-    // Test 4.3: Insert at end (contents)
+    // Test 4.3: Insert at end (index == size) (return value + contents)
     section_total++; total_tests++;
     {
         LinkedList ll;
         ll.append(10);
         ll.append(20);
-        ll.insert_at(2, 30);
-        if (check_contents(ll, "[10 -> 20 -> 30]", "Insert at end (contents)")) {
+        auto [ok, ops] = ll.insert_at(2, 30);
+        if (check_result(ok, true, ll, "[10 -> 20 -> 30]", "Insert at end (index == size)")) {
             section_passed++; total_passed++;
         }
     }
 
-    // Test 4.4: Multiple inserts (contents)
+    // Test 4.4: Multiple inserts (return value + contents)
     section_total++; total_tests++;
     {
         LinkedList ll;
         ll.append(10);
         ll.append(40);
-        ll.insert_at(1, 20);
-        ll.insert_at(2, 30);
-        if (check_contents(ll, "[10 -> 20 -> 30 -> 40]", "Multiple inserts at different positions (contents)")) {
+        auto [ok1, ops1] = ll.insert_at(1, 20);
+        auto [ok2, ops2] = ll.insert_at(2, 30);
+        if (check_result(ok1 && ok2, true, ll, "[10 -> 20 -> 30 -> 40]", "Multiple inserts at different positions")) {
             section_passed++; total_passed++;
         }
     }
 
-    // Test 4.5: size() after inserts (size)
+    // Test 4.5: Insert at negative index is rejected (return value + contents unchanged)
+    section_total++; total_tests++;
+    {
+        LinkedList ll;
+        ll.append(10);
+        ll.append(20);
+        auto [ok, ops] = ll.insert_at(-1, 99);
+        if (check_result(ok, false, ll, "[10 -> 20]", "Insert at negative index returns false (list unchanged)")) {
+            section_passed++; total_passed++;
+        }
+    }
+
+    // Test 4.6: Insert past the end is rejected (return value + contents unchanged)
+    section_total++; total_tests++;
+    {
+        LinkedList ll;
+        ll.append(10);
+        ll.append(20);
+        auto [ok, ops] = ll.insert_at(5, 99);   // valid range is [0, 2]
+        if (check_result(ok, false, ll, "[10 -> 20]", "Insert past end returns false (list unchanged)")) {
+            section_passed++; total_passed++;
+        }
+    }
+
+    // Test 4.7: size() after a valid insert (size)
     section_total++; total_tests++;
     {
         LinkedList ll;
@@ -529,11 +594,25 @@ int main() {
         }
     }
 
+    // Test 4.8: size() unchanged after a rejected insert (size)
+    section_total++; total_tests++;
+    {
+        LinkedList ll;
+        ll.append(10);
+        ll.append(20);
+        ll.insert_at(5, 99);   // out of bounds: size must stay 2
+        if (check_size(ll, 2, "size() == 2 after a rejected out-of-bounds insert (unchanged)")) {
+            section_passed++; total_passed++;
+        }
+    }
+
     cout << "Section 4: " << section_passed << "/" << section_total << " passed\n" << endl;
 
     if (section_passed < section_total) {
         cout << "[!] Fix insert_at() before proceeding.\n" << endl;
         cout << "[HINT] Common insert_at() bugs:" << endl;
+        cout << "  - Not checking bounds: reject index < 0 or index > _size, return {false, 0}" << endl;
+        cout << "  - Changing the list (or _size) on a rejected out-of-bounds insert" << endl;
         cout << "  - Not updating _size (shows up as a size() test failure above)" << endl;
         cout << "  - Off-by-one errors (should traverse to index-1, then insert after)" << endl;
         cout << "  - Not handling index 0 case (should use prepend or similar logic)" << endl;
@@ -635,7 +714,7 @@ int main() {
     {
         LinkedList ll;
         auto [success, ops] = ll.remove(10);
-        if (check_remove(success, false, ll, "[]", "Remove from empty list returns false")) {
+        if (check_result(success, false, ll, "[]", "Remove from empty list returns false")) {
             section_passed++; total_passed++;
         }
     }
@@ -647,7 +726,7 @@ int main() {
         ll.append(10);
         ll.append(20);
         auto [success, ops] = ll.remove(99);
-        if (check_remove(success, false, ll, "[10 -> 20]", "Remove non-existing element returns false")) {
+        if (check_result(success, false, ll, "[10 -> 20]", "Remove non-existing element returns false")) {
             section_passed++; total_passed++;
         }
     }
@@ -660,7 +739,7 @@ int main() {
         ll.append(20);
         ll.append(30);
         auto [success, ops] = ll.remove(10);
-        if (check_remove(success, true, ll, "[20 -> 30]", "Remove first element")) {
+        if (check_result(success, true, ll, "[20 -> 30]", "Remove first element")) {
             section_passed++; total_passed++;
         }
     }
@@ -673,7 +752,7 @@ int main() {
         ll.append(20);
         ll.append(30);
         auto [success, ops] = ll.remove(20);
-        if (check_remove(success, true, ll, "[10 -> 30]", "Remove middle element")) {
+        if (check_result(success, true, ll, "[10 -> 30]", "Remove middle element")) {
             section_passed++; total_passed++;
         }
     }
@@ -686,7 +765,7 @@ int main() {
         ll.append(20);
         ll.append(30);
         auto [success, ops] = ll.remove(30);
-        if (check_remove(success, true, ll, "[10 -> 20]", "Remove last element")) {
+        if (check_result(success, true, ll, "[10 -> 20]", "Remove last element")) {
             section_passed++; total_passed++;
         }
     }
@@ -697,7 +776,7 @@ int main() {
         LinkedList ll;
         ll.append(42);
         auto [success, ops] = ll.remove(42);
-        if (check_remove(success, true, ll, "[]", "Remove only element (list becomes empty)")) {
+        if (check_result(success, true, ll, "[]", "Remove only element (list becomes empty)")) {
             section_passed++; total_passed++;
         }
     }

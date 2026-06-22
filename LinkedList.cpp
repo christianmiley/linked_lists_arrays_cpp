@@ -36,26 +36,32 @@ int LinkedList::prepend(int value) {
     return 0;
 }
 
-int LinkedList::insert_at(int index, int value) {
+std::pair<bool, int> LinkedList::insert_at(int index, int value) {
     /*
      * Insert value at the given index (0-indexed).
-     * Return number of operations (traversals + insertion).
-     * 
-     * Hint: Traverse to index-1, then insert after that node.
+     * Valid positions are [0, _size]; index == _size inserts at the end.
+     * Return (true, operations) on success, or (false, 0) if the index is
+     * out of bounds (index < 0 or index > _size).
+     *
+     * Hint: Check bounds first, then traverse to index-1 and insert after it.
      */
     // TODO: Implement this
-    return 0;
+    return {false, 0};
 }
 
-std::pair<int, int> LinkedList::get(int index) {
+std::tuple<bool, int, int> LinkedList::get(int index) {
     /*
      * Get value at given index.
-     * Return (value, operations) or (-1, operations) if out of bounds.
-     * 
+     * Return (true, value, operations) if the index is valid, or
+     * (false, -1, operations) if out of bounds (index < 0 or index >= _size).
+     *
+     * Note: we return a found flag instead of using -1 as a sentinel, so that
+     * -1 (and any other value) can be stored and retrieved unambiguously.
+     *
      * Hint: Traverse from head, counting as you go.
      */
     // TODO: Implement this
-    return {-1, 0};
+    return {false, -1, 0};
 }
 
 std::pair<int, int> LinkedList::search(int value) {

@@ -44,7 +44,7 @@ pair<int, double> benchmark_operation(const string& operation, int size) {
         mt19937 gen(rd());
         uniform_int_distribution<> dis(0, size - 1);
         for (int i = 0; i < 100; i++) {
-            auto [val, ops] = ds.get(dis(gen));
+            auto [found, val, ops] = ds.get(dis(gen));
             total_ops += ops;
         }
     } else if (operation == "search") {
@@ -61,7 +61,8 @@ pair<int, double> benchmark_operation(const string& operation, int size) {
             ds.append(i);
         }
         // Insert at middle
-        total_ops = ds.insert_at(size / 2, -1);
+        auto [ok, ops] = ds.insert_at(size / 2, -1);
+        total_ops = ops;
     }
     
     auto end = chrono::high_resolution_clock::now();
